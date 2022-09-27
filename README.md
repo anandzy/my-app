@@ -1,3 +1,6 @@
 # my-app
-## This Demo App build in java using maven frame work
 - A java app on maven framework &amp; Junit, Jococo test cases enabled.
+
+## Below diagram have the components we used in this app.
+![Flow Diagram](docs/Untitled.jpg?raw=true "flow")
+
