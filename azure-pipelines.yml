@@ -1,0 +1,51 @@
+name: JavaBuildTest
+
+trigger:
+  batch: false
+  branches:
+    include:
+    - main
+#variables:
+#run-time expression
+#  isFeature: $[eq(variables['Build.SourceBranchName'], 'cicd')]
+#  isDev: $[eq(variables['Build.SourceBranchName'], 'eccs-grafana-dev')]
+#  raisedPR: contains(variables['Build.SourceVersionMessage'], 'raisepr')
+
+#variables:
+#- group: Build_Test_Java
+
+########################################################################################################
+
+
+stages:
+
+  - stage: S1
+    displayName: S1
+    jobs:
+      - job:
+        displayName: J1
+        steps:
+        - task: Maven@3
+          inputs:
+            mavenPomFile: 'pom.xml'
+            mavenOptions: '-Xmx3072m'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.8'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/TEST-*.xml'
+            goals: 'package'
+
+  - stage: S2
+    displayName: Variable Abstract
+    dependsOn: S1
+    jobs:
+      - job: VariablesAbstract
+        variables:
+          name: currentBranch
+          value: $(variables['Build.SourceBranch'])
+        steps:
+          - template: azure-pipelines-template.yml
+          - bash: |
+              echo "triggering Variables abstract"
+            displayName: trigger variable template
